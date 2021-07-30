@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import 'react-native-gesture-handler';
 import { openDatabase } from 'react-native-sqlite-storage';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { Dimensions } from 'react-native';
 import {
     SafeAreaView,
     ScrollView,
@@ -121,15 +122,16 @@ const Profile = ({ navigation }) => {
     };
 
     let listItemView = (item) => {
+        var date = new Date(item.surgeryDate)
         // var formatDate = item.surgeryDate
         return (
             <View
                 key={item.user_id}
-                style={{ backgroundColor: 'white', padding: 20 }}>
-                <Text>Name: {item.name}</Text>
-                <Text>Gender: {item.gender}</Text>
-                <Text>NRIC: {item.nric}</Text>
-                <Text>Surgery Date: {item.surgeryDate}</Text>
+                style={styles.userInfoContainer}>
+                <Text style={styles.userInfoText}>Name: {item.name}</Text>
+                <Text style={styles.userInfoText}>Gender: {item.gender.toString().charAt(0).toUpperCase()}{item.gender.toString().slice(1)}</Text>
+                <Text style={styles.userInfoText}>NRIC: {item.nric}</Text>
+                <Text style={styles.userInfoText}>Surgery Date: {date.getDate()} / {date.getMonth()} / {date.getFullYear()}</Text>
             </View>
         );
     };
@@ -241,7 +243,7 @@ const Profile = ({ navigation }) => {
         dotsList = []
     })
     return (
-        <View>
+        <ScrollView>
             <View style={styles.container}>
 
                 <FlatList
@@ -259,13 +261,13 @@ const Profile = ({ navigation }) => {
                     </View>
                     <View style={styles.innerRowArrangementMiddle}>
                         {latestFlexionVal !== "" ?
-                            <Text>{latestFlexionVal} °</Text>
+                            <Text style={styles.readingsTextCenter}>{latestFlexionVal} °</Text>
                             :
-                            <Text>Please start recording</Text>
+                            <Text style={styles.readingsTextCenter}>Please start recording</Text>
                         }
                     </View>
                     <View style={styles.innerRowArrangementRight}>
-                        <TouchableOpacity style={styles.submitButton} onPress={() => { navigation.navigate("FlexionChart") }}><Text>View Chart</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.submitButton} onPress={() => { navigation.navigate("FlexionChart") }}><Text style={styles.submitButtonText}>View Chart</Text></TouchableOpacity>
                     </View>
                 </View>
 
@@ -276,13 +278,13 @@ const Profile = ({ navigation }) => {
                     </View>
                     <View style={styles.innerRowArrangementMiddle}>
                         {latestExtensionVal !== "" ?
-                            <Text>{latestExtensionVal} °</Text>
+                            <Text style={styles.readingsTextCenter}>{latestExtensionVal} °</Text>
                             :
-                            <Text>Please start recording</Text>
+                            <Text style={styles.readingsTextCenter}>Please start recording</Text>
                         }
                     </View>
                     <View style={styles.innerRowArrangementRight}>
-                        <TouchableOpacity style={styles.submitButton}><Text>View Chart</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.submitButton}><Text style={styles.submitButtonText}>View Chart</Text></TouchableOpacity>
                     </View>
                 </View>
 
@@ -293,13 +295,13 @@ const Profile = ({ navigation }) => {
                     </View>
                     <View style={styles.innerRowArrangementMiddle}>
                         {latestSitStandVal !== "" ?
-                            <Text>{latestSitStandVal} seconds</Text>
+                            <Text style={styles.readingsTextCenter}>{latestSitStandVal} seconds</Text>
                             :
-                            <Text>Please start recording</Text>
+                            <Text style={styles.readingsTextCenter}>Please start recording</Text>
                         }
                     </View>
                     <View style={styles.innerRowArrangementRight}>
-                        <TouchableOpacity style={styles.submitButton}><Text>View Chart</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.submitButton}><Text style={styles.submitButtonText}>View Chart</Text></TouchableOpacity>
                     </View>
                 </View>
             </View >
@@ -328,7 +330,7 @@ const Profile = ({ navigation }) => {
                             <Text style={styles.readingsText}>Date:</Text>
                         </View>
                         <View style={styles.readingsTextRight}>
-                            <Text style={styles.readingsText}>{dateVal}</Text>
+                            <Text style={styles.readingsTextCenter}>{dateVal}</Text>
                         </View>
                     </View>
                     <View style={styles.readingsTextInnerContainer}>
@@ -337,9 +339,9 @@ const Profile = ({ navigation }) => {
                         </View>
                         <View style={styles.readingsTextRight}>
                             {flexionVal == "" ?
-                                <Text style={styles.readingsText}>Not Recorded</Text>
+                                <Text style={styles.readingsTextCenter}>Not Recorded</Text>
                                 :
-                                <Text style={styles.readingsText}>{flexionVal} °</Text>
+                                <Text style={styles.readingsTextCenter}>{flexionVal} °</Text>
                             }
                         </View>
                     </View>
@@ -349,9 +351,9 @@ const Profile = ({ navigation }) => {
                         </View>
                         <View style={styles.readingsTextRight}>
                             {extensionVal == "" ?
-                                <Text style={styles.readingsText}>Not Recorded</Text>
+                                <Text style={styles.readingsTextCenter}>Not Recorded</Text>
                                 :
-                                <Text style={styles.readingsText}>{extensionVal} °</Text>
+                                <Text style={styles.readingsTextCenter}>{extensionVal} °</Text>
                             }
                         </View>
                     </View>
@@ -361,9 +363,9 @@ const Profile = ({ navigation }) => {
                         </View>
                         <View style={styles.readingsTextRight}>
                             {sitStandVal == "" ?
-                                <Text style={styles.readingsText}>Not Recorded</Text>
+                                <Text style={styles.readingsTextCenter}>Not Recorded</Text>
                                 :
-                                <Text style={styles.readingsText}>{sitStandVal} seconds</Text>
+                                <Text style={styles.readingsTextCenter}>{sitStandVal} seconds</Text>
                             }
                         </View>
                     </View>
@@ -371,7 +373,7 @@ const Profile = ({ navigation }) => {
 
 
             </View>
-        </View >
+        </ScrollView >
 
 
 
@@ -382,14 +384,39 @@ const Profile = ({ navigation }) => {
     )
 
 }
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
+        // backgroundColor: "white",
+    },
+    userInfoContainer: {
+        // backgroundColor: "yellow",
+        width: windowWidth,
+        paddingLeft: 10,
+        paddingBottom: 5,
+        paddingTop: 5,
+        margin: 3,
+        borderBottomWidth: 0.5,
+        borderColor: "lightblue",
+    },
+    userInfoText: {
+        marginBottom: 2,
+        fontSize: 20,
     },
 
     rowArrangement: {
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        paddingLeft: 10,
+        paddingBottom: 5,
+        paddingTop: 5,
+        margin: 3,
         flexDirection: "row",
+        borderBottomWidth: 0.5,
+        borderColor: "lightblue",
         // justifyContent: "space-between",
     },
     innerRowArrangementLeft: {
@@ -423,15 +450,28 @@ const styles = StyleSheet.create({
         height: 150,
     },
     submitButton: {
-        fontSize: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
         padding: 10,
         borderColor: "black",
         borderRadius: 10,
-        borderWidth: 1,
+        borderWidth: 0.1,
         margin: 10,
+        backgroundColor: "lightblue",
+
+    },
+    submitButtonText: {
+        textAlign: "center",
+        fontSize: 15,
+        fontWeight: "bold",
     },
     readingsText: {
         fontSize: 20,
+    },
+    readingsTextCenter: {
+        fontSize: 20,
+        textAlign: "center",
     },
 
     paddingContainer: {
