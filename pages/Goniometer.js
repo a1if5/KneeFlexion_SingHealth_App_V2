@@ -40,6 +40,7 @@ const Goniometer = ({ navigation, route }) => {
     const [flexionDegree, setFlexionDegree] = useState("0");
     const [extensionDegreeControl, setExtensionDegreeControl] = useState("Pending");
     const [flexionDegreeControl, setFlexionDegreeControl] = useState("Pending");
+    console.log("")
 
     function round(n) {
         if (!n) {
