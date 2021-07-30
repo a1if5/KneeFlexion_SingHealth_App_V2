@@ -79,6 +79,7 @@ const Home = ({ navigation }) => {
     let resetUserDb = () => {
         db.transaction((tx) => {
             tx.executeSql('DROP TABLE table_user')
+            setAcc(false)
             console.log("success")
         })
     }
@@ -204,8 +205,7 @@ const Home = ({ navigation }) => {
         });
     }, []);
 
-    //click lol then save then run the app
-    // console.log(appFunctions[3].id + " " + acc)
+
 
     return (
         <View>
@@ -224,16 +224,17 @@ const Home = ({ navigation }) => {
                     data={appFunctions}
                     renderItem={({ item }) =>
                         <View>
-                            {(acc == true) ? (
+                            {(acc == false && item.id == 3) ? (
                                 <View style={styles.boxContainer}>
-                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi) }}>
+                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi2) }}>
                                         <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
                                         <Text style={styles.buttonHeader}>{item.title}</Text>
                                     </TouchableOpacity>
                                 </View>
+
                             ) : (
-                                <View>
-                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi2) }}>
+                                <View style={styles.boxContainer}>
+                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi) }}>
                                         <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
                                         <Text style={styles.buttonHeader}>{item.title}</Text>
                                     </TouchableOpacity>

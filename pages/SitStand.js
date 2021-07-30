@@ -8,7 +8,6 @@ import Profile from "./Profile.js"
 import { AppRegistry, StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, Button, Alert } from 'react-native';
 // import Tts from 'react-native-tts';
 import { openDatabase } from 'react-native-sqlite-storage';
-
 import { Dimensions } from 'react-native';
 import Tts from 'react-native-tts';
 
@@ -113,17 +112,6 @@ const SitStand = ({ navigation }) => {
         })
     }
 
-    // const speak = () => {
-    //     var thingToSay = "3.......... 2......... 1......... Start"
-
-    //     Speech.speak(thingToSay, {
-    //         onDone: console.log(thingToSay),
-    //         rate: 0.7,
-    //     });
-    // };
-    // Tts.speak('Hello, world!');
-
-    console.log(buttonHeight)
     return (
         <View>
 
@@ -149,17 +137,6 @@ const SitStand = ({ navigation }) => {
                 :
                 <View></View>
             }
-            {/* <View styles={styles.buttonContainer}> */}
-            {/* {secondClick == true ?
-                    <View styles={styles.startstopbutton}>
-                        <TouchableHighlight onPress={resetStopwatch}>
-                            <Text style={{ fontSize: 30 }}>Reset</Text>
-                        </TouchableHighlight>
-                    </View>
-                    :
-                    <Text></Text>
-
-                } */}
             {
                 secondClick == true ?
 
@@ -178,11 +155,6 @@ const SitStand = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    // <View style={styles.container}>
-                    //     <Text>Helo</Text>
-                    //     <View style={{ flex: 2, backgroundColor: "darkorange" }} />
-                    //     <View style={{ flex: 3, backgroundColor: "green" }} />
-                    // </View>
                     :
                     <View></View>
             }
@@ -196,16 +168,19 @@ const options = StyleSheet.create({
     container: {
         backgroundColor: '#000',
         padding: 5,
-        // borderRadius: 5,
-        alignItems: "center",
         width: timerWidth,
         height: timerHeight,
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        borderRadius: 10,
+
     },
     text: {
-        fontSize: 50,
+        fontSize: 45,
         alignItems: "center",
         color: '#FFF',
-        // marginLeft: 7,
+        fontWeight: "bold",
     }
 });
 
@@ -216,6 +191,8 @@ const styles = StyleSheet.create({
         alignItems: 'center', //Centered vertically
         flex: 1,
         fontSize: 30,
+        borderRadius: 10,
+
         // paddingVertical: 100,
 
 
@@ -230,12 +207,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         height: buttonHeight,
         justifyContent: 'center',
+        borderRadius: 10,
     },
     sButton: {
         backgroundColor: "lightyellow",
         alignItems: "center",
         height: buttonHeight,
         justifyContent: 'center',
+        borderRadius: 10,
+
 
 
     },
@@ -247,6 +227,7 @@ const styles = StyleSheet.create({
     },
     startstopbutton: {
         flex: 0.7,
+
         // backgroundColor: "lightblue",
         // alignItems: "center",
         // height: "100%",

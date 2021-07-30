@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import RadioGroup from 'react-native-radio-buttons-group';
 import DatePicker from 'react-native-date-picker'
+import { Dimensions } from 'react-native';
 
 import {
     View,
@@ -14,11 +15,13 @@ import {
     StyleSheet,
     TextInput,
     Button,
+    TouchableOpacity,
 } from 'react-native';
 import Mytextinput from './Mytextinput';
 import Mybutton from './Mybutton';
 import { openDatabase } from 'react-native-sqlite-storage';
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const genderArray = [{
     id: '1',
@@ -40,6 +43,7 @@ const RegisterUser = ({ navigation }) => {
     let [genderId, setGenderId] = useState('')
     let [acc, setAcc] = useState(false)
     let [flatListItems, setFlatListItems] = useState([]);
+    let [showDatePicker, setShowDatePicker] = useState(false)
 
 
 
@@ -124,7 +128,7 @@ const RegisterUser = ({ navigation }) => {
 
     return (
 
-        < View style={styles.container} >
+        < View style={styles.overallContainer} >
             <Text style={styles.formHeader}>Name</Text>
             <TextInput
                 style={styles.formBox}
@@ -146,44 +150,97 @@ const RegisterUser = ({ navigation }) => {
                 layout="row"
             />
             <Text style={styles.formHeader}>Surgery Date</Text>
-            <DatePicker
-                style={styles.formBoxDate}
-                date={date}
-                mode={"date"}
-                onDateChange={setDate}
-            />
-            <Text style={{ fontSize: 42 }}>
+
+            <View style={styles.dateBox}>
+                <TouchableOpacity onPress={() => {
+                    setShowDatePicker(true)
+                }}>
+                    <Text style={{ fontSize: 30, textAlign: "center" }}>
+                        {correctDate}
+                    </Text>
+                </TouchableOpacity>
+
+            </View>
+
+
+            {showDatePicker == true ?
+                <DatePicker
+                    style={styles.formBoxDate}
+                    date={date}
+                    mode={"date"}
+                    onDateChange={setDate}
+                />
+                :
+                <View></View>
+            }
+
+
+
+            {/* <Text style={{ fontSize: 42 }}>
                 {name}
-            </Text>
+            </Text> */}
             {/* <Text style={{ fontSize: 42 }}>
                 {nric}
             </Text> */}
             {/* <Text style={{ fontSize: 42 }}>
                 {date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()}
             </Text> */}
-            <Text style={{ fontSize: 42 }}>
-                {correctDate} {date.getMonth()}
-            </Text>
-
-            <Text style={{ fontSize: 42 }}>
+            {/* <Text style={{ fontSize: 42 }}>
                 {correctDateinDateFormat.getDate()}
                 {correctDateinDateFormat.getMonth()}
                 {correctDateinDateFormat.getFullYear()}
-            </Text>
+            </Text> */}
             {/* <Text style={{ fontSize: 42 }}>
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getDate()}
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getMonth()}
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getFullYear()}
             </Text> */}
-            <Text style={{ fontSize: 42 }}>
+            {/* <Text style={{ fontSize: 42 }}>
                 {genderId}
-            </Text>
-            <Button onPress={register_user} title="Register"></Button>
+            </Text> */}
+            <TouchableOpacity style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></TouchableOpacity>
+
 
         </View >
     );
 };
+
+
 const styles = StyleSheet.create({
+    overallContainer: {
+        flex: 1,
+        // backgroundColor: "yellow",
+        alignItems: "center",
+        justifyContent: "center",
+        // display: "flex",
+    },
+    textStyleButton: {
+        color: "#fff",
+        textAlign: "center",
+        fontSize: 40,
+    },
+    submitButtonFormStyle: {
+        margin: 40,
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        backgroundColor: "#2b2e6d",
+        borderRadius: 30,
+        // borderColor: "#fff",
+        width: windowWidth * 0.8,
+        height: windowHeight * 0.1,
+    },
+    dateBox: {
+        // padding: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        borderColor: "gray",
+        borderRadius: 10,
+        borderWidth: 1,
+        width: windowWidth * 0.8,
+        height: windowHeight * 0.06,
+    },
     container: {
         alignItems: "center",
     },
@@ -194,7 +251,10 @@ const styles = StyleSheet.create({
 
     formHeader: {
         fontSize: 30,
-        padding: 10,
+        // padding: 10,
+        marginTop: 25,
+        marginBottom: 10,
+
 
     },
     formBox: {
@@ -202,14 +262,15 @@ const styles = StyleSheet.create({
         borderColor: "gray",
         borderRadius: 10,
         borderWidth: 1,
-        width: 300,
+        width: windowWidth * 0.8,
+        height: windowHeight * 0.06,
     },
     formBoxDate: {
         padding: 10,
         borderColor: "gray",
         borderRadius: 10,
-        borderWidth: 1,
-        width: 300,
+        borderWidth: 0.2,
+        width: windowWidth * 0.8,
         height: 150,
     },
     submitButton: {
