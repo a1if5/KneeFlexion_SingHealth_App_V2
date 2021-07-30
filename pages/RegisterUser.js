@@ -198,7 +198,8 @@ const RegisterUser = ({ navigation }) => {
             {/* <Text style={{ fontSize: 42 }}>
                 {genderId}
             </Text> */}
-            <TouchableOpacity style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></TouchableOpacity>
+            <Button style={styles.submitButtonFormStyle} onPress={register_user} title="Register"></Button>
+            {/* <TouchableOpacity style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></TouchableOpacity> */}
 
 
         </View >

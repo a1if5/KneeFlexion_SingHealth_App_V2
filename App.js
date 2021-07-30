@@ -70,16 +70,15 @@ const App = ({ navigation }) => {
           name="Profile"
           component={Profile}
 
-          options={{
-            // headerTitle: "Profile",
-            headerLeft: () => (
+          options={({ navigation, route }) => ({
+            headerLeft: (props) => (
               <HeaderBackButton
+                {...props}
                 onPress={() => navigation.navigate('Home')}
-                title="Info"
-                color="#fff"
               />
             ),
-          }} />
+          })}
+        />
         <Stack.Screen name="Goniometer" component={Goniometer} />
         <Stack.Screen name="SitStand" component={SitStand} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />

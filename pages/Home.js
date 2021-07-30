@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Profile from "./Profile.js"
 import { openDatabase } from 'react-native-sqlite-storage';
 import { Dimensions } from 'react-native';
+import { useIsFocused } from "@react-navigation/native";
 
 
 import {
@@ -109,105 +110,131 @@ const Home = ({ navigation }) => {
     }
 
 
-
+    const isFocused = useIsFocused()
     // resetUserDb()
-
     useEffect(() => {
-        db.transaction(function (txn) {
-            txn.executeSql(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
-                [],
-                function (tx, res) {
-                    console.log('Useritem:', res.rows.length);
-                    if (res.rows.length == 0) {
-                        txn.executeSql('DROP TABLE IF EXISTS table_user', []);
-                        txn.executeSql(
-                            'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20), nric VARCHAR(10), gender VARCHAR(10), surgeryDate VARCHAR(20))',
-                            [],
-                        );
-                    } else {
-                        setAcc(true)
-                    }
-                },
-            );
-        });
-        db.transaction(function (txn) {
-            txn.executeSql(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='table_allDate'",
-                [],
-                function (tx, res) {
-                    console.log('Dateitem:', res.rows.length);
-                    if (res.rows.length == 0) {
-                        txn.executeSql('DROP TABLE IF EXISTS table_allDate', []);
-                        txn.executeSql(
-                            'CREATE TABLE IF NOT EXISTS table_allDate(date_id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR(20))',
-                            [],
-                        );
-                    } else {
-                        console.log("no")
-                    }
-                },
-            );
-        });
-        db.transaction(function (txn) {
-            txn.executeSql(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='table_sitStand'",
-                [],
-                function (tx, res) {
-                    console.log('Dateitem:', res.rows.length);
-                    if (res.rows.length == 0) {
-                        txn.executeSql('DROP TABLE IF EXISTS table_sitStand', []);
-                        txn.executeSql(
-                            'CREATE TABLE IF NOT EXISTS table_sitStand(sitStand_id INTEGER PRIMARY KEY AUTOINCREMENT, time VARCHAR(20), date VARCHAR(20))',
-                            [],
-                        );
-                    } else {
-                        console.log("no")
-                    }
-                },
-            );
-        });
-        db.transaction(function (txn) {
-            txn.executeSql(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='table_flexion'",
-                [],
-                function (tx, res) {
-                    console.log('Dateitem:', res.rows.length);
-                    if (res.rows.length == 0) {
-                        txn.executeSql('DROP TABLE IF EXISTS table_flexion', []);
-                        txn.executeSql(
-                            'CREATE TABLE IF NOT EXISTS table_flexion(flexion_id INTEGER PRIMARY KEY AUTOINCREMENT, degree VARCHAR(20), date VARCHAR(20))',
-                            [],
-                        );
-                    } else {
-                        console.log("no")
-                    }
-                },
-            );
-        });
-        db.transaction(function (txn) {
-            txn.executeSql(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='table_extension'",
-                [],
-                function (tx, res) {
-                    console.log('Dateitem:', res.rows.length);
-                    if (res.rows.length == 0) {
-                        txn.executeSql('DROP TABLE IF EXISTS table_extension', []);
-                        txn.executeSql(
-                            'CREATE TABLE IF NOT EXISTS table_extension(extension_id INTEGER PRIMARY KEY AUTOINCREMENT, degree VARCHAR(20), date VARCHAR(20))',
-                            [],
-                        );
-                    } else {
-                        console.log("no")
-                    }
-                },
-            );
-        });
-    }, []);
+        if (isFocused) {
 
+            db.transaction(function (txn) {
+                txn.executeSql(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='table_user'",
+                    [],
+                    function (tx, res) {
+                        console.log('Useritem:', res.rows.length);
+                        if (res.rows.length == 0) {
+                            txn.executeSql('DROP TABLE IF EXISTS table_user', []);
+                            txn.executeSql(
+                                'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20), nric VARCHAR(10), gender VARCHAR(10), surgeryDate VARCHAR(20))',
+                                [],
+                            );
+                        } else {
+                            console.log("Account REGISTERED")
+
+                            setAcc(true)
+                        }
+                    },
+                );
+            });
+            db.transaction(function (txn) {
+                txn.executeSql(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='table_allDate'",
+                    [],
+                    function (tx, res) {
+                        console.log('Dateitem:', res.rows.length);
+                        if (res.rows.length == 0) {
+                            txn.executeSql('DROP TABLE IF EXISTS table_allDate', []);
+                            txn.executeSql(
+                                'CREATE TABLE IF NOT EXISTS table_allDate(date_id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR(20))',
+                                [],
+                            );
+                        } else {
+                            console.log("no")
+                        }
+                    },
+                );
+            });
+            db.transaction(function (txn) {
+                txn.executeSql(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='table_sitStand'",
+                    [],
+                    function (tx, res) {
+                        console.log('Dateitem:', res.rows.length);
+                        if (res.rows.length == 0) {
+                            txn.executeSql('DROP TABLE IF EXISTS table_sitStand', []);
+                            txn.executeSql(
+                                'CREATE TABLE IF NOT EXISTS table_sitStand(sitStand_id INTEGER PRIMARY KEY AUTOINCREMENT, time VARCHAR(20), date VARCHAR(20))',
+                                [],
+                            );
+                        } else {
+                            console.log("no")
+                        }
+                    },
+                );
+            });
+            db.transaction(function (txn) {
+                txn.executeSql(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='table_flexion'",
+                    [],
+                    function (tx, res) {
+                        console.log('Dateitem:', res.rows.length);
+                        if (res.rows.length == 0) {
+                            txn.executeSql('DROP TABLE IF EXISTS table_flexion', []);
+                            txn.executeSql(
+                                'CREATE TABLE IF NOT EXISTS table_flexion(flexion_id INTEGER PRIMARY KEY AUTOINCREMENT, degree VARCHAR(20), date VARCHAR(20))',
+                                [],
+                            );
+                        } else {
+                            console.log("no")
+                        }
+                    },
+                );
+            });
+            db.transaction(function (txn) {
+                txn.executeSql(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='table_extension'",
+                    [],
+                    function (tx, res) {
+                        console.log('Dateitem:', res.rows.length);
+                        if (res.rows.length == 0) {
+                            txn.executeSql('DROP TABLE IF EXISTS table_extension', []);
+                            txn.executeSql(
+                                'CREATE TABLE IF NOT EXISTS table_extension(extension_id INTEGER PRIMARY KEY AUTOINCREMENT, degree VARCHAR(20), date VARCHAR(20))',
+                                [],
+                            );
+                        } else {
+                            console.log("no")
+                        }
+                    },
+                );
+            });
+        }
+    }, [isFocused]);
+
+    let listButtons = () => {
+        return (
+            <FlatList
+                data={appFunctions}
+                renderItem={({ item }) =>
+                    <View>
+                        <View style={styles.boxContainer}>
+                            <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi) }}>
+                                <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
+                                <Text style={styles.buttonHeader}>{item.title}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                }
+                keyExtractor={(item) => item.id}
+                numColumns={2}
+            >
+            </FlatList>
+        )
+    }
+    console.log(acc)
 
 
     return (
+
         <View>
 
             <View style={styles.homeContainer}>
@@ -220,33 +247,39 @@ const Home = ({ navigation }) => {
                     resetFlexionDb()
                     resetExtensionDb()
                 }}></Button>
-                <FlatList
-                    data={appFunctions}
-                    renderItem={({ item }) =>
-                        <View>
-                            {(acc == false && item.id == 3) ? (
-                                <View style={styles.boxContainer}>
-                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi2) }}>
-                                        <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
-                                        <Text style={styles.buttonHeader}>{item.title}</Text>
-                                    </TouchableOpacity>
-                                </View>
 
-                            ) : (
-                                <View style={styles.boxContainer}>
-                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi) }}>
-                                        <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
-                                        <Text style={styles.buttonHeader}>{item.title}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
+                {acc == true ?
+                    listButtons()
+                    :
+                    <FlatList
+                        data={appFunctions}
+                        renderItem={({ item }) =>
+                            <View>
 
-                        </View>
-                    }
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                >
-                </FlatList>
+
+                                {(acc == false && item.id == 3) ? (
+                                    <View style={styles.boxContainer}>
+                                        <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi2) }}>
+                                            <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
+                                            <Text style={styles.buttonHeader}>{item.title}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (
+                                    <View style={styles.boxContainer}>
+                                        <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi) }}>
+                                            <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
+                                            <Text style={styles.buttonHeader}>{item.title}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+
+                            </View>
+                        }
+                        keyExtractor={(item) => item.id}
+                        numColumns={2}
+                    >
+                    </FlatList>
+                }
             </View>
         </View>
     )
