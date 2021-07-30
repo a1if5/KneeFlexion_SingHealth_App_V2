@@ -330,7 +330,11 @@ const Profile = ({ navigation }) => {
                             <Text style={styles.readingsText}>Date:</Text>
                         </View>
                         <View style={styles.readingsTextRight}>
-                            <Text style={styles.readingsTextCenter}>{dateVal}</Text>
+                            {dateVal !== "" ?
+                                <Text style={styles.readingsTextCenter}>{dateVal}</Text>
+                                :
+                                <Text style={styles.readingsTextCenter}>Please select a date</Text>
+                            }
                         </View>
                     </View>
                     <View style={styles.readingsTextInnerContainer}>
