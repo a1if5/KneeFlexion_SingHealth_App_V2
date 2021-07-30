@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Profile from "./Profile.js"
 import { openDatabase } from 'react-native-sqlite-storage';
+import { Dimensions } from 'react-native';
 
 
 import {
@@ -42,14 +43,14 @@ const appFunctions = [
         image: "https://img.icons8.com/ios/50/000000/waiting-room.png",
 
     },
+    // {
+    //     id: 3,
+    //     title: "Data",
+    //     navi: "Data",
+    //     image: "https://img.icons8.com/dotty/80/000000/activity-history.png",
+    // },
     {
         id: 3,
-        title: "Data",
-        navi: "Data",
-        image: "https://img.icons8.com/dotty/80/000000/activity-history.png",
-    },
-    {
-        id: 4,
         title: "Profile",
         title2: "Register User",
         navi: "Profile",
@@ -57,13 +58,13 @@ const appFunctions = [
         image: "https://img.icons8.com/dotty/80/000000/activity-history.png",
     },
     {
-        id: 5,
+        id: 4,
         title: "Guide",
         navi: "Guide",
         image: "https://img.icons8.com/ios/50/000000/city-guide.png"
     },
     {
-        id: 6,
+        id: 5,
         title: "Contact Us",
         navi: "HomeScreen",
         image: "https://img.icons8.com/ios/50/000000/phone-disconnected.png",
@@ -210,7 +211,7 @@ const Home = ({ navigation }) => {
         <View>
 
             <View style={styles.homeContainer}>
-                <Text style={styles.header}>SGH</Text>
+                <Text style={styles.header}>Mo-Knee-Tor</Text>
                 <Button title="reset all tables" onPress={() => {
                     setAcc(false)
                     resetUserDb()
@@ -224,15 +225,19 @@ const Home = ({ navigation }) => {
                     renderItem={({ item }) =>
                         <View>
                             {(acc == true) ? (
-                                <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi) }}>
-                                    <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
-                                    <Text style={styles.buttonHeader}>{item.title}</Text>
-                                </TouchableOpacity>
+                                <View style={styles.boxContainer}>
+                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi) }}>
+                                        <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
+                                        <Text style={styles.buttonHeader}>{item.title}</Text>
+                                    </TouchableOpacity>
+                                </View>
                             ) : (
-                                <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi2) }}>
-                                    <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
-                                    <Text style={styles.buttonHeader}>{item.title}</Text>
-                                </TouchableOpacity>
+                                <View>
+                                    <TouchableOpacity style={styles.buttonContainer} onPress={() => { navigation.navigate(item.navi2) }}>
+                                        <Image style={styles.logoContainer} source={{ uri: item.image }} resizeMode='contain'></Image>
+                                        <Text style={styles.buttonHeader}>{item.title}</Text>
+                                    </TouchableOpacity>
+                                </View>
                             )}
 
                         </View>
@@ -246,24 +251,40 @@ const Home = ({ navigation }) => {
     )
 }
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+    boxContainer: {
+        borderRadius: 20,
+        height: windowHeight * 0.25,
+        width: windowWidth * 0.45,
+        backgroundColor: "lightblue",
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        margin: 5,
+    },
     logoContainer: {
-        height: 100,
-        width: 100,
-        backgroundColor: "lightgray",
+        borderRadius: 20,
+        height: windowHeight * 0.12,
+        width: windowWidth * 0.25,
+        // backgroundColor: "rgba(211,211,211, 0.3)",
+
     },
     header: {
-        paddingTop: 20,
+        paddingTop: 10,
         textAlign: "center",
-        fontSize: 30,
+        fontSize: 40,
+        fontWeight: "bold",
     },
     buttonHeader: {
         textAlign: "center",
         fontSize: 20,
+        fontWeight: "bold",
+        // backgroundColor: "yellow"
     },
     buttonContainer: {
-        alignContent: "space-between",
-        padding: 40,
+        alignItems: "center",
     },
     homeContainer: {
         alignItems: "center",
