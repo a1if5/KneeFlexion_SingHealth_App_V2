@@ -495,6 +495,7 @@
 				DEVELOPMENT_TEAM = MNHGZCFWN6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = sgh/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -525,6 +526,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MNHGZCFWN6;
 				INFOPLIST_FILE = sgh/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

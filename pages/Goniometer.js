@@ -1,14 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-// import type {Node} from 'react';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Profile from "./Profile.js"
-import Kfke from "../kfke.js"
 import { openDatabase } from 'react-native-sqlite-storage';
-import kf from "../kf.png"
-
+import { DeviceMotion } from "expo-sensors";
+import { Dimensions } from 'react-native';
 import {
     SafeAreaView,
     ScrollView,
@@ -18,83 +13,33 @@ import {
     useColorScheme,
     View,
     Button,
+    Input,
+    TextInput,
     TouchableOpacity,
+    Touchable,
+    Alert,
     Image,
     FlatList,
-    Alert,
 } from 'react-native';
-const Stack = createStackNavigator();
-const kneeFunctions = [
-    {
-        id: 1,
-        title: "Record Extension",
-        image: require("../ke.png"),
-        sign: "extension"
-    },
-    {
-        id: 2,
-        title: "Record Flexion",
-        image: require("../kf.png"),
-        sign: "flexion"
-
-    },
-]
-
+import {
+    accelerometer,
+    gyroscope,
+    setUpdateIntervalForType,
+    SensorTypes
+} from "react-native-sensors";
 var db = openDatabase({ name: 'userDb.db' });
-
-const Goniometer = ({ navigation }) => {
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const Goniometer = ({ navigation, route }) => {
+    setUpdateIntervalForType(SensorTypes.gyroscope, 100);
     const [firstDate, setFirstDate] = useState("")
-    const [extensionDegree, setExtensionDegree] = useState("0");
-    const [selectedGenderValue, setSelectedGenderValue] = useState(null);
+    const [shouldShow, setShouldShow] = useState(true);
     const [selectedValue, setSelectedValue] = useState(null);
+    const [selectedGenderValue, setSelectedGenderValue] = useState(null);
+    const [extensionDegree, setExtensionDegree] = useState("0");
+    const [flexionDegree, setFlexionDegree] = useState("0");
     const [extensionDegreeControl, setExtensionDegreeControl] = useState("Pending");
     const [flexionDegreeControl, setFlexionDegreeControl] = useState("Pending");
-
-    const [flexionDegree, setFlexionDegree] = useState("0");
-    const [shouldShow, setShouldShow] = useState(true);
-    const [data, setData] = useState({
-        alpha: 0,
-        beta: 0,
-        gamma: 0,
-    });
-    const { alpha, beta, gamma } = data;
-    // function displayAngle() {
-    //     setSelectedGenderValue("Male")
-    // }
-
-    function setDegreeValues(sign, beta) {
-        if (sign == "flexion") {
-            var degr = getDegrees(round(beta));
-            // add(degr);
-            setFlexionDegree(getDegrees(round(beta)));
-            setFlexionToDatabase(flexionDegree)
-            setFlexionDegreeControl("Done");
-            // setVal(degr);
-        } else {
-            var a = getDegrees(round(beta));
-            // add1(a);
-            setExtensionDegree(getDegrees(round(beta)));
-            setExtensionToDatabase(extensionDegree)
-            setExtensionDegreeControl("Done");
-            // setVals(a);
-        }
-    }
-    useEffect(() => {
-        db.transaction((tx) => {
-            tx.executeSql('SELECT * FROM table_user', [], (tx, results) => {
-                setFirstDate(results.rows.item(0).surgeryDate)
-                setSelectedGenderValue(results.rows.item(0).gender)
-                console.log(selectedGenderValue)
-                console.log(firstDate)
-            });
-        });
-    }, []);
-
-    var timeDiff = new Date().getTime() - new Date(firstDate).getTime()
-    dayDiff = Math.floor(timeDiff / (24 * 60 * 60 * 1000));
-
-
-    console.log(dayDiff)
 
     function round(n) {
         if (!n) {
@@ -102,6 +47,14 @@ const Goniometer = ({ navigation }) => {
         }
         return Math.floor(n * 100) / 100;
     }
+    useEffect(() => {
+        db.transaction((tx) => {
+            tx.executeSql('SELECT * FROM table_user', [], (tx, results) => {
+                setFirstDate(results.rows.item(0).surgeryDate)
+                setSelectedGenderValue(results.rows.item(0).gender)
+            });
+        });
+    }, []);
     function getDegrees(n) {
         if (!n) {
             return 0;
@@ -115,13 +68,118 @@ const Goniometer = ({ navigation }) => {
         var pi = Math.PI;
         return radians * (180 / pi);
     }
-    function noGenderWeek(n, selectedGenderValue, selectedValue) {
+    let setFlexionToDatabase = () => {
+        var todayDate = new Date();
+        var month = parseInt(todayDate.getMonth() + 1).toString()
+        var day = todayDate.getDate().toString()
+        if (month.length == 1) {
+            month = "0" + month
+        }
+        if (day.length == 1) {
+            day = "0" + day
+        }
+        var formattedDate = todayDate.getFullYear() + "-" + month + "-" + day
+        db.transaction(function (tx) {
+            tx.executeSql(
+                'INSERT INTO table_flexion (degree, date) VALUES (?,?)',
+                [flexionDegree.toString(), formattedDate],
+                (tx, results) => {
+                    console.log('Results11', results.rowsAffected);
+                    if (results.rowsAffected > 0) {
+
+                        // Alert.alert(
+                        //     'Success',
+                        //     'Flexion Recorded!',
+                        //     [
+                        //         {
+                        //             text: 'Ok',
+                        //             onPress: () => navigation.navigate(''),
+                        //         },
+                        //     ],
+                        //     { cancelable: false },
+                        // );
+                    } else {
+                        // alert('Registration Failed');
+                    }
+                },
+            );
+        })
+    }
+    let setExtensionToDatabase = () => {
+        var todayDate = new Date();
+        var month = parseInt(todayDate.getMonth() + 1).toString()
+        var day = todayDate.getDate().toString()
+        if (month.length == 1) {
+            month = "0" + month
+        }
+        if (day.length == 1) {
+            day = "0" + day
+        }
+        var formattedDate = todayDate.getFullYear() + "-" + month + "-" + day
+        db.transaction(function (tx) {
+            tx.executeSql(
+                'INSERT INTO table_extension (degree, date) VALUES (?,?)',
+                [extensionDegree.toString(), formattedDate],
+                (tx, results) => {
+                    console.log('Extension Results', results.rowsAffected);
+                    if (results.rowsAffected > 0) {
+
+                        // Alert.alert(
+                        //     'Success',
+                        //     'Extension Recorded!',
+                        //     [
+                        //         {
+                        //             text: 'Ok',
+                        //             onPress: () => navigation.navigate(''),
+                        //         },
+                        //     ],
+                        //     { cancelable: false },
+                        // );
+                    } else {
+                        // alert('Registration Failed');
+                    }
+                },
+            );
+        })
+    }
+    const [data, setData] = useState({
+        alpha: 0,
+        beta: 0,
+        gamma: 0,
+    });
+    const [subscription, setSubscription] = useState(null);
+    const _subscribe = () => {
+        setSubscription(
+            DeviceMotion.addListener(({ rotation }) => {
+                setData(rotation);
+            })
+        );
+    };
+    const _unsubscribe = () => {
+        subscription && subscription.remove();
+        setSubscription(null);
+    };
+    useEffect(() => {
+        _subscribe();
+        return () => _unsubscribe();
+    }, []);
+    const { alpha, beta, gamma } = data;
+    var currentDate = new Date()
+    var timeDifference;
+    if (firstDate.length != 0) {
+        timeDifference = currentDate.getTime() - Date.parse(firstDate)
+    } else {
+        timeDifference = 0
+    }
+    var dayDiff = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+    function noGenderWeek(n) {
         if (selectedGenderValue === "" || selectedValue === "") {
             return true;
         }
         return false;
     }
-    function green(n, selectedGenderValue) {
+    //green function to indicate above 75th Percentile
+    function green(n) {
         if (selectedGenderValue === "male") {
             if (
                 (n >= 112 && dayDiff <= 14) ||
@@ -149,7 +207,7 @@ const Goniometer = ({ navigation }) => {
         return false;
     }
     //blue function to decide if 75th to 50th percentile
-    function blue(n, selectedGenderValue) {
+    function blue(n) {
         if (selectedGenderValue === "male") {
             if (
                 (n < 112 && n >= 101 && dayDiff <= 14) ||
@@ -177,7 +235,7 @@ const Goniometer = ({ navigation }) => {
         return false;
     }
     //red function to decide if 50th to 25th percentile
-    function red(n, selectedGenderValue) {
+    function red(n) {
         if (selectedGenderValue === "male") {
             if (
                 (n > 90 && n < 101 && dayDiff <= 14) ||
@@ -205,7 +263,7 @@ const Goniometer = ({ navigation }) => {
         return false;
     }
     //red function to decide if 25th percentile and below
-    function belowRed(n, selectedGenderValue) {
+    function belowRed(n) {
         if (selectedGenderValue === "male") {
             if (
                 (n <= 90 && dayDiff <= 14) ||
@@ -231,149 +289,154 @@ const Goniometer = ({ navigation }) => {
         }
         return false;
     }
+    const submitAlert = () => {
+        Alert.alert("Are you sure you want to submit?", "", [
+            {
+                text: "Cancel",
+                onPress: () => console.log(),
+                style: "cancel",
+            },
+            {
+                text: "Yes",
+                onPress: () =>
+                    navigation.navigate("FormSG", {
+                        flexData: val,
+                        extenData: vals,
+                        name: "FormSG",
+                        flex: 1,
+                    }),
+            },
+        ]);
+    };
+    const kneeFunctions = [
+        {
+            id: 1,
+            title: "Record Extension",
+            image: require("../ke.png"),
+            sign: "extension"
+        },
+        {
+            id: 2,
+            title: "Record Flexion",
+            image: require("../kf.png"),
+            sign: "flexion"
 
-
-    let setFlexionToDatabase = () => {
-        var todayDate = new Date();
-        var month = parseInt(todayDate.getMonth() + 1).toString()
-        var day = todayDate.getDate().toString()
-        if (month.length == 1) {
-            month = "0" + month
+        },
+    ]
+    function setDegreeValues(sign, beta) {
+        if (sign == "flexion") {
+            var degr = getDegrees(round(beta));
+            // add(degr);
+            setFlexionDegree(getDegrees(round(beta)));
+            setFlexionToDatabase(flexionDegree)
+            setFlexionDegreeControl("Done");
+            // setVal(degr);
+        } else {
+            var a = getDegrees(round(beta));
+            // add1(a);
+            setExtensionDegree(getDegrees(round(beta)));
+            setExtensionToDatabase(extensionDegree)
+            setExtensionDegreeControl("Done");
+            // setVals(a);
         }
-        if (day.length == 1) {
-            day = "0" + day
-        }
-        var formattedDate = todayDate.getFullYear() + "-" + month + "-" + day
-        db.transaction(function (tx) {
-            tx.executeSql(
-                'INSERT INTO table_flexion (degree, date) VALUES (?,?)',
-                [flexionDegree.toString(), formattedDate],
-                (tx, results) => {
-                    console.log('Results11', results.rowsAffected);
-                    if (results.rowsAffected > 0) {
-
-                        Alert.alert(
-                            'Success',
-                            'Flexion Recorded!',
-                            [
-                                {
-                                    text: 'Ok',
-                                    onPress: () => navigation.navigate(''),
-                                },
-                            ],
-                            { cancelable: false },
-                        );
-                    } else {
-                        alert('Registration Failed');
-                    }
-                },
-            );
-        })
     }
-    let setExtensionToDatabase = () => {
-        var todayDate = new Date();
-        var month = parseInt(todayDate.getMonth() + 1).toString()
-        var day = todayDate.getDate().toString()
-        if (month.length == 1) {
-            month = "0" + month
-        }
-        if (day.length == 1) {
-            day = "0" + day
-        }
-        var formattedDate = todayDate.getFullYear() + "-" + month + "-" + day
-        db.transaction(function (tx) {
-            tx.executeSql(
-                'INSERT INTO table_extension (degree, date) VALUES (?,?)',
-                [extensionDegree.toString(), formattedDate],
-                (tx, results) => {
-                    console.log('Extension Results', results.rowsAffected);
-                    if (results.rowsAffected > 0) {
-
-                        Alert.alert(
-                            'Success',
-                            'Extension Recorded!',
-                            [
-                                {
-                                    text: 'Ok',
-                                    onPress: () => navigation.navigate(''),
-                                },
-                            ],
-                            { cancelable: false },
-                        );
-                    } else {
-                        alert('Registration Failed');
-                    }
-                },
-            );
-        })
-    }
-
-
-    var icons = require("../ke.png")
     return (
-        <View>
+        <View style={styles.container}>
+            <View style={{ alignItems: "center" }}>
+                <TouchableOpacity
+                    onPress={() => setShouldShow(!shouldShow)}
+                    style={styles.ShowHideButtonStyle}
+                >
+                    <Text style={styles.ShowHideTextButtonStyle}>
+                        {shouldShow ? "Hide Display" : "Show Display"}
+                    </Text>
 
-
-            <View style={styles.homeContainer}>
-                <View style={{ alignItems: "center" }}>
-                    <TouchableOpacity
-                        onPress={() => setShouldShow(!shouldShow)}
-                        style={styles.ShowHideButtonStyle}
-                    >
-                        <Text style={styles.ShowHideTextButtonStyle}>
-                            {shouldShow ? "Hide Display" : "Show Display"}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                {shouldShow ? (
-                    <View>
-                        <Text style={{ textAlign: "center", fontSize: 45 }}>
-                            Knee Range{" "}
-                        </Text>
-                        {noGenderWeek(getDegrees(round(beta)), selectedGenderValue, selectedValue) ? (
-                            <Text style={stylePercentile.textPercentileBlack}>
-                                {getDegrees(round(beta))}°
-                            </Text>
-                        ) : null}
-                        {green(getDegrees(round(beta)), selectedGenderValue) ? (
-                            <Text style={stylePercentile.textPercentileGreen}>
-                                {getDegrees(round(beta))}°
-                            </Text>
-                        ) : null}
-                        {blue(getDegrees(round(beta)), selectedGenderValue) ? (
-                            <Text style={stylePercentile.textPercentileOrange}>
-                                {getDegrees(round(beta))}°
-                            </Text>
-                        ) : null}
-                        {red(getDegrees(round(beta)), selectedGenderValue) ? (
-                            <Text style={stylePercentile.textPercentileOrange}>
-                                {getDegrees(round(beta))}°
-                            </Text>
-                        ) : null}
-                        {belowRed(getDegrees(round(beta)), selectedGenderValue) ? (
-                            <Text style={stylePercentile.textPercentileRed}>
-                                {getDegrees(round(beta))}°
-                            </Text>
-                        ) : null}
-                    </View>
-                ) : null}
-                {/* <View>
-                    {useEffect(() => {
-                        displayAngle();
-                    }, [])}
-                </View> */}
+                </TouchableOpacity>
+            </View>
+            {shouldShow ? (
                 <View>
-                    <Text style={styles.previousReadingsTitle}>Previous Extension: {extensionDegree}° </Text>
-                    <Text style={styles.previousReadingsTitle}>Previous Flexion: {flexionDegree}° </Text>
+                    <Text style={{ textAlign: "center", fontSize: 45 }}>
+                        Knee Range{" "}
+                    </Text>
+                    {noGenderWeek(getDegrees(round(beta))) ? (
+                        <Text style={stylePercentile.textPercentileBlack}>
+                            {getDegrees(round(beta))}°
+                        </Text>
+                    ) : null}
+                    {green(getDegrees(round(beta))) ? (
+                        <Text style={stylePercentile.textPercentileGreen}>
+                            {getDegrees(round(beta))}°
+                        </Text>
+                    ) : null}
+                    {blue(getDegrees(round(beta))) ? (
+                        <Text style={stylePercentile.textPercentileOrange}>
+                            {getDegrees(round(beta))}°
+                        </Text>
+                    ) : null}
+                    {red(getDegrees(round(beta))) ? (
+                        <Text style={stylePercentile.textPercentileOrange}>
+                            {getDegrees(round(beta))}°
+                        </Text>
+                    ) : null}
+                    {belowRed(getDegrees(round(beta))) ? (
+                        <Text style={stylePercentile.textPercentileRed}>
+                            {getDegrees(round(beta))}°
+                        </Text>
+                    ) : null}
                 </View>
+            ) : null}
+            {shouldShow ? (
+                <View>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            fontSize: 30,
+                            fontStyle: "italic",
+                        }}
+                    >
+                        Previous Extension: {extensionDegree}°
+            </Text>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            fontSize: 30,
+                            fontStyle: "italic",
+                        }}
+                    >
+                        Previous Flexion: {flexionDegree}°
+            </Text>
+                </View>
+            ) : null}
+            {!shouldShow ? (
+                <View>
+                    <Text></Text>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            fontSize: 30,
+                            fontStyle: "italic",
+                        }}
+                    >
+                        Extension: {extensionDegreeControl}
+                    </Text>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            fontSize: 30,
+                            fontStyle: "italic",
+                        }}
+                    >
+                        Flexion: {flexionDegreeControl}
+                    </Text>
+                </View>
+            ) : null}
+
+            <ScrollView>
+
                 <FlatList
                     data={kneeFunctions}
                     renderItem={({ item }) =>
                         <View>
-                            {/* <Button onPress={() => {
-                                setDegreeValues(item.sign, beta)
-                            }}
-                                title="lol"></Button> */}
                             <TouchableOpacity
                                 style={styles.buttonContainer}
                                 onPress={() => {
@@ -387,12 +450,46 @@ const Goniometer = ({ navigation }) => {
                     numColumns={1}
                 >
                 </FlatList>
-            </View>
+                <View style={styles.MainRecordContainer}>
+                    {!(flexionDegree != 0 && extensionDegree != 0) ? <Text></Text> : null}
+                    {flexionDegree != 0 && extensionDegree != 0 ? (
+                        <TouchableOpacity
+                            style={styles.SubmitButtonFormStyle}
+                            onPress={submitAlert}
+                        >
+                            <Text style={styles.TextStyleButton}>Submit FormSG</Text>
+                        </TouchableOpacity>
+                    ) : null}
+                </View>
+            </ScrollView>
         </View>
-    )
-}
+    );
+};
 
+function useForceUpdate() {
+    const [value, setValue] = useState(0);
+    return [() => setValue(value + 1), value];
+}
 const styles = StyleSheet.create({
+    TextStyleButton: {
+        color: "#fff",
+        textAlign: "center",
+        fontSize: 40,
+    },
+    SubmitButtonFormStyle: {
+        backgroundColor: "#2b2e6d",
+        borderRadius: 35,
+        // alignItems: "center",
+        // borderWidth: 1,
+        borderColor: "#fff",
+        width: windowWidth * 0.9,
+        height: windowHeight * 0.1,
+        justifyContent: "center",
+    },
+    MainRecordContainer: {
+        alignItems: "center",
+        // backgroundColor: "yellow",
+    },
     ShowHideButtonStyle: {
         marginTop: 10,
         backgroundColor: "#2b2e6d",
@@ -427,8 +524,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     buttonContainer: {
-        // alignContent: "space-between",
-        // padding: 40,
+        alignItems: "center",
         // backgroundColor: "yellow",
 
     },
@@ -443,11 +539,11 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
-        elevation: 12,
+        // elevation: 12,
         marginVertical: 20,
         backgroundColor: "rgba(161,221,239,0.4)",
         height: 200,
-        width: 300,
+        width: windowWidth * 0.9,
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
@@ -456,7 +552,15 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 30,
         fontStyle: "italic",
-    }
+    },
+    SubmitButtonStyle: {
+        backgroundColor: "#2b2e6d",
+        borderRadius: 35,
+        borderWidth: 1,
+        borderColor: "#fff",
+        height: 120,
+        justifyContent: "center",
+    },
 
 });
 
@@ -487,9 +591,4 @@ const stylePercentile = StyleSheet.create({
         paddingLeft: 20,
     },
 });
-
-
-
-
 export default Goniometer
-
