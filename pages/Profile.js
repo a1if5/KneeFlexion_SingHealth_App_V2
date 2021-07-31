@@ -54,8 +54,9 @@ const Profile = ({ navigation }) => {
         db.transaction((tx) => {
             tx.executeSql('SELECT * FROM table_user', [], (tx, results) => {
                 var temp = [];
-                for (let i = 0; i < results.rows.length; ++i)
+                for (let i = 0; i < results.rows.length; ++i) {
                     temp.push(results.rows.item(i));
+                }
                 setFlatListItems(temp);
             });
         });
@@ -88,6 +89,7 @@ const Profile = ({ navigation }) => {
                 var temp = [];
                 for (let i = 0; i < results.rows.length; ++i) {
                     temp.push(results.rows.item(i));
+                    console.log(results.rows.item(i).degree + "woo")
                     if (i == results.rows.length - 1) {
                         setLatestFlexionVal(results.rows.item(i).degree)
                     } else {
@@ -157,7 +159,7 @@ const Profile = ({ navigation }) => {
         );
     };
     function RenderReadings(day) {
-        console.log(day)
+        // console.log(day)
 
         setDateVal(day)
         sitStandList.map((x) => {
@@ -169,7 +171,7 @@ const Profile = ({ navigation }) => {
         })
         flexionList.map((x) => {
             if (x.date == day) {
-                console.log(x.date)
+                // console.log(x.date)
                 setFlexionVal(x.degree)
             } else {
                 setFlexionVal("")
@@ -177,7 +179,7 @@ const Profile = ({ navigation }) => {
         })
         extensionList.map((x) => {
             if (x.date == day) {
-                console.log(x.date)
+                // console.log(x.date)
                 setExtensionVal(x.degree)
             } else {
                 setExtensionVal("")

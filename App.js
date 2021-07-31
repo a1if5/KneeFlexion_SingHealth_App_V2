@@ -14,6 +14,8 @@ import RegisterUser from "./pages/RegisterUser.js"
 import ViewAllUser from "./pages/ViewAllUser.js"
 import FlexionChart from "./pages/FlexionChart.js"
 import SitStandFormSG from "./pages/SitStandFormSG.js"
+import GoniometerFormSG from "./pages/GoniometerFormSG.js"
+
 
 import SQLite from 'react-native-sqlite-storage';
 
@@ -87,6 +89,7 @@ const App = ({ navigation }) => {
         <Stack.Screen name="FlexionChart" component={FlexionChart} />
         <Stack.Screen name="SitStandFormSG" component={SitStandFormSG} />
 
+        <Stack.Screen name="GoniometerFormSG" component={GoniometerFormSG} />
 
 
 

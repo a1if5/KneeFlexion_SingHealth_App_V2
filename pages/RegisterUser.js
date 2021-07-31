@@ -16,6 +16,7 @@ import {
     TextInput,
     Button,
     TouchableOpacity,
+    Pressable,
 } from 'react-native';
 import Mytextinput from './Mytextinput';
 import Mybutton from './Mybutton';
@@ -68,7 +69,6 @@ const RegisterUser = ({ navigation }) => {
         // console.log(dateList)
         var formatDate = date.getFullYear() + "/" + month + "/" + date.getDay()
         var formattedDate = new Date(formatDate)
-        console.log(formattedDate);
         console.log(name, nric, genderId, formatDate);
         db.transaction(function (tx) {
             var formatDate = date.getFullYear() + "/" + month + "/" + date.getDate()
@@ -102,9 +102,7 @@ const RegisterUser = ({ navigation }) => {
                     (tx, results) => {
                         // console.log('Results', results.rowsAffected);
                         if (results.rowsAffected > 0) {
-                            // console.log("woo")
                         } else {
-                            // console.log("boo")
                         }
                     },
                 );
@@ -195,11 +193,12 @@ const RegisterUser = ({ navigation }) => {
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getMonth()}
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getFullYear()}
             </Text> */}
-            {/* <Text style={{ fontSize: 42 }}>
+            <Text style={{ fontSize: 42 }}>
                 {genderId}
-            </Text> */}
-            <Button style={styles.submitButtonFormStyle} onPress={register_user} title="Register"></Button>
-            {/* <TouchableOpacity style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></TouchableOpacity> */}
+            </Text>
+            <Button style={styles.submitButtonFormStyle} onPress={register_user} title="Register" color></Button>
+            <TouchableOpacity style={styles.submitButtonFormStyle} onPress={() => register_user()}><Text style={styles.textStyleButton}>Register</Text></TouchableOpacity>
+            <Pressable style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></Pressable>
 
 
         </View >

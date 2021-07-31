@@ -40,7 +40,6 @@ const Goniometer = ({ navigation, route }) => {
     const [flexionDegree, setFlexionDegree] = useState("0");
     const [extensionDegreeControl, setExtensionDegreeControl] = useState("Pending");
     const [flexionDegreeControl, setFlexionDegreeControl] = useState("Pending");
-    console.log("")
 
     function round(n) {
         if (!n) {
@@ -53,6 +52,7 @@ const Goniometer = ({ navigation, route }) => {
             tx.executeSql('SELECT * FROM table_user', [], (tx, results) => {
                 setFirstDate(results.rows.item(0).surgeryDate)
                 setSelectedGenderValue(results.rows.item(0).gender)
+                console.log(esults.rows.item(0).gender)
             });
         });
     }, []);
@@ -69,7 +69,7 @@ const Goniometer = ({ navigation, route }) => {
         var pi = Math.PI;
         return radians * (180 / pi);
     }
-    let setFlexionToDatabase = () => {
+    let setFlexionToDatabase = (degree) => {
         var todayDate = new Date();
         var month = parseInt(todayDate.getMonth() + 1).toString()
         var day = todayDate.getDate().toString()
@@ -81,24 +81,23 @@ const Goniometer = ({ navigation, route }) => {
         }
         var formattedDate = todayDate.getFullYear() + "-" + month + "-" + day
         db.transaction(function (tx) {
+            console.log(degree + "wo")
             tx.executeSql(
                 'INSERT INTO table_flexion (degree, date) VALUES (?,?)',
-                [flexionDegree.toString(), formattedDate],
+                [degree.toString(), formattedDate],
                 (tx, results) => {
-                    console.log('Results11', results.rowsAffected);
                     if (results.rowsAffected > 0) {
-
-                        // Alert.alert(
-                        //     'Success',
-                        //     'Flexion Recorded!',
-                        //     [
-                        //         {
-                        //             text: 'Ok',
-                        //             onPress: () => navigation.navigate(''),
-                        //         },
-                        //     ],
-                        //     { cancelable: false },
-                        // );
+                        Alert.alert(
+                            'Success',
+                            'Flexion Recorded!',
+                            [
+                                {
+                                    text: 'Ok',
+                                    onPress: () => navigation.navigate(''),
+                                },
+                            ],
+                            { cancelable: false },
+                        );
                     } else {
                         // alert('Registration Failed');
                     }
@@ -106,7 +105,7 @@ const Goniometer = ({ navigation, route }) => {
             );
         })
     }
-    let setExtensionToDatabase = () => {
+    let setExtensionToDatabase = (degree) => {
         var todayDate = new Date();
         var month = parseInt(todayDate.getMonth() + 1).toString()
         var day = todayDate.getDate().toString()
@@ -120,22 +119,20 @@ const Goniometer = ({ navigation, route }) => {
         db.transaction(function (tx) {
             tx.executeSql(
                 'INSERT INTO table_extension (degree, date) VALUES (?,?)',
-                [extensionDegree.toString(), formattedDate],
+                [degree.toString(), formattedDate],
                 (tx, results) => {
-                    console.log('Extension Results', results.rowsAffected);
                     if (results.rowsAffected > 0) {
-
-                        // Alert.alert(
-                        //     'Success',
-                        //     'Extension Recorded!',
-                        //     [
-                        //         {
-                        //             text: 'Ok',
-                        //             onPress: () => navigation.navigate(''),
-                        //         },
-                        //     ],
-                        //     { cancelable: false },
-                        // );
+                        Alert.alert(
+                            'Success',
+                            'Extension Recorded!',
+                            [
+                                {
+                                    text: 'Ok',
+                                    onPress: () => navigation.navigate(''),
+                                },
+                            ],
+                            { cancelable: false },
+                        );
                     } else {
                         // alert('Registration Failed');
                     }
@@ -174,7 +171,7 @@ const Goniometer = ({ navigation, route }) => {
     }
     var dayDiff = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
     function noGenderWeek(n) {
-        if (selectedGenderValue === "" || selectedValue === "") {
+        if (selectedGenderValue === "") {
             return true;
         }
         return false;
@@ -294,16 +291,16 @@ const Goniometer = ({ navigation, route }) => {
         Alert.alert("Are you sure you want to submit?", "", [
             {
                 text: "Cancel",
-                onPress: () => console.log(),
+                onPress: () => console.log("submitted"),
                 style: "cancel",
             },
             {
                 text: "Yes",
                 onPress: () =>
-                    navigation.navigate("FormSG", {
-                        flexData: val,
-                        extenData: vals,
-                        name: "FormSG",
+                    navigation.navigate("GoniometerFormSG", {
+                        flexionData: flexionDegree,
+                        extensionData: extensionDegree,
+                        name: "GoniometerFormSG",
                         flex: 1,
                     }),
             },
@@ -326,17 +323,21 @@ const Goniometer = ({ navigation, route }) => {
     ]
     function setDegreeValues(sign, beta) {
         if (sign == "flexion") {
+            console.log(getDegrees(round(beta)))
             var degr = getDegrees(round(beta));
             // add(degr);
-            setFlexionDegree(getDegrees(round(beta)));
-            setFlexionToDatabase(flexionDegree)
+            setFlexionDegree(getDegrees(round(beta)))
+            // console.log(flexionDegree)
+            // setTimeout(function () {
+            setFlexionToDatabase(getDegrees(round(beta)))
+            // }, 1000)
             setFlexionDegreeControl("Done");
             // setVal(degr);
         } else {
             var a = getDegrees(round(beta));
             // add1(a);
             setExtensionDegree(getDegrees(round(beta)));
-            setExtensionToDatabase(extensionDegree)
+            setExtensionToDatabase(getDegrees(round(beta)))
             setExtensionDegreeControl("Done");
             // setVals(a);
         }
