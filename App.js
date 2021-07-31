@@ -10,12 +10,11 @@ import Home from "./pages/Home.js"
 import Goniometer from "./pages/Goniometer.js"
 import SitStand from "./pages/SitStand.js"
 import HomeScreen from "./pages/HomeScreen.js"
-import RegisterUser from "./pages/RegisterUser.js"
+import HomePage from "./pages/HomePage.js"
 import ViewAllUser from "./pages/ViewAllUser.js"
 import FlexionChart from "./pages/FlexionChart.js"
 import SitStandFormSG from "./pages/SitStandFormSG.js"
 import GoniometerFormSG from "./pages/GoniometerFormSG.js"
-
 
 import SQLite from 'react-native-sqlite-storage';
 
@@ -31,6 +30,7 @@ import {
   useColorScheme,
   View,
   Button,
+  AppRegistry,
 } from 'react-native';
 
 import {
@@ -71,7 +71,6 @@ const App = ({ navigation }) => {
         <Stack.Screen
           name="Profile"
           component={Profile}
-
           options={({ navigation, route }) => ({
             headerLeft: (props) => (
               <HeaderBackButton
@@ -84,11 +83,10 @@ const App = ({ navigation }) => {
         <Stack.Screen name="Goniometer" component={Goniometer} />
         <Stack.Screen name="SitStand" component={SitStand} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="RegisterUser" component={RegisterUser} />
+        <Stack.Screen name="HomePage" component={HomePage} />
         <Stack.Screen name="ViewAllUser" component={ViewAllUser} />
         <Stack.Screen name="FlexionChart" component={FlexionChart} />
         <Stack.Screen name="SitStandFormSG" component={SitStandFormSG} />
-
         <Stack.Screen name="GoniometerFormSG" component={GoniometerFormSG} />
 
 
