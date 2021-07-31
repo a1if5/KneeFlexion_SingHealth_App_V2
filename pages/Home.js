@@ -16,6 +16,7 @@ import {
     StyleSheet,
     TextInput,
     Button,
+    Image,
     TouchableOpacity,
     Pressable,
 } from 'react-native';
@@ -157,6 +158,42 @@ const RegisterUser = ({ navigation }) => {
     }
 
 
+    let altScreen = () => {
+        return (
+            <View
+                style={styles.sghcontainer}
+                onTouchStart={() => navigation.navigate("HomePage")}
+            >
+                <Image
+                    style={{
+                        // display: "flex",
+                        // marginLeft: "auto",
+                        // marginRight: "auto",
+                        resizeMode: "contain",
+                        width: windowWidth * 0.9,
+                        height: windowHeight * 0.1,
+                        marginBottom: 50,
+                    }}
+                    source={require("../sgh-logo.png")}
+                />
+                {/* <Text></Text>
+                <Text></Text> */}
+                <Text
+                    style={{
+                        textAlign: "center",
+                        fontSize: 40,
+                        fontWeight: "bold",
+                        fontStyle: "italic",
+                    }}
+                >
+                    Mo-Knee-Tor
+              </Text>
+                <Text style={{ textAlign: "center", fontSize: 20 }}>
+                    Created by {"\n"} Alif and Ismahfaris {"\n"}
+                </Text>
+            </View>
+        );
+    };
     let register_user = () => {
         var dateList = set84Dates()
         var month = parseInt(date.getMonth() + 1).toString()
@@ -173,6 +210,7 @@ const RegisterUser = ({ navigation }) => {
                 (tx, results) => {
                     console.log('Results', results.rowsAffected);
                     if (results.rowsAffected > 0) {
+                        setAcc(true)
                         Alert.alert(
                             'Success',
                             'You are Registered Successfully',
@@ -218,90 +256,102 @@ const RegisterUser = ({ navigation }) => {
         }
         return dateList
     }
-
-    return (
-
-        < View style={styles.overallContainer} >
-            <Text style={styles.formHeader}>Name</Text>
-            <TextInput
-                style={styles.formBox}
-                placeholder={"Name"}
-                onChangeText={name => setName(name)}
-                defaultValue={name}>
-            </TextInput>
-            <Text style={styles.formHeader}>NRIC</Text>
-            <TextInput
-                style={styles.formBox}
-                placeholder={"Last 4 Digits"}
-                onChangeText={nric => setNric(nric)}
-                defaultValue={nric}>
-            </TextInput>
-            <Text style={styles.formHeader}>Gender</Text>
-            <RadioGroup
-                radioButtons={gender}
-                onPress={onPressRadioButton}
-                layout="row"
-            />
-            <Text style={styles.formHeader}>Surgery Date</Text>
-
-            <View style={styles.dateBox}>
-                <TouchableOpacity onPress={() => {
-                    setShowDatePicker(true)
-                }}>
-                    <Text style={{ fontSize: 30, textAlign: "center" }}>
-                        {correctDate}
-                    </Text>
-                </TouchableOpacity>
-
-            </View>
-
-
-            {showDatePicker == true ?
-                <DatePicker
-                    style={styles.formBoxDate}
-                    date={date}
-                    mode={"date"}
-                    onDateChange={setDate}
+    if (acc == false) {
+        return (
+            < View style={styles.overallContainer} >
+                <Text style={styles.formHeader}>Name</Text>
+                <TextInput
+                    style={styles.formBox}
+                    placeholder={"Name"}
+                    onChangeText={name => setName(name)}
+                    defaultValue={name}>
+                </TextInput>
+                <Text style={styles.formHeader}>NRIC</Text>
+                <TextInput
+                    style={styles.formBox}
+                    placeholder={"Last 4 Digits"}
+                    onChangeText={nric => setNric(nric)}
+                    defaultValue={nric}>
+                </TextInput>
+                <Text style={styles.formHeader}>Gender</Text>
+                <RadioGroup
+                    radioButtons={gender}
+                    onPress={onPressRadioButton}
+                    layout="row"
                 />
-                :
-                <View></View>
-            }
+                <Text style={styles.formHeader}>Surgery Date</Text>
+
+                <View style={styles.dateBox}>
+                    <TouchableOpacity onPress={() => {
+                        setShowDatePicker(true)
+                    }}>
+                        <Text style={{ fontSize: 30, textAlign: "center" }}>
+                            {correctDate}
+                        </Text>
+                    </TouchableOpacity>
+
+                </View>
+
+
+                {showDatePicker == true ?
+                    <DatePicker
+                        style={styles.formBoxDate}
+                        date={date}
+                        mode={"date"}
+                        onDateChange={setDate}
+                    />
+                    :
+                    <View></View>
+                }
 
 
 
-            {/* <Text style={{ fontSize: 42 }}>
+                {/* <Text style={{ fontSize: 42 }}>
                 {name}
             </Text> */}
-            {/* <Text style={{ fontSize: 42 }}>
+                {/* <Text style={{ fontSize: 42 }}>
                 {nric}
             </Text> */}
-            {/* <Text style={{ fontSize: 42 }}>
+                {/* <Text style={{ fontSize: 42 }}>
                 {date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()}
             </Text> */}
-            {/* <Text style={{ fontSize: 42 }}>
+                {/* <Text style={{ fontSize: 42 }}>
                 {correctDateinDateFormat.getDate()}
                 {correctDateinDateFormat.getMonth()}
                 {correctDateinDateFormat.getFullYear()}
             </Text> */}
-            {/* <Text style={{ fontSize: 42 }}>
+                {/* <Text style={{ fontSize: 42 }}>
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getDate()}
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getMonth()}
                 {(new Date(date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate())).getFullYear()}
             </Text> */}
-            <Text style={{ fontSize: 42 }}>
-                {genderId}
-            </Text>
-            {/* <Button style={styles.submitButtonFormStyle} onPress={register_user} title="Register" color></Button> */}
-            <TouchableOpacity style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></TouchableOpacity>
-            {/* <Pressable style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></Pressable> */}
+                <Text style={{ fontSize: 42 }}>
+                    {genderId}
+                </Text>
+                {/* <Button style={styles.submitButtonFormStyle} onPress={register_user} title="Register" color></Button> */}
+                <TouchableOpacity style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></TouchableOpacity>
+                {/* <Pressable style={styles.submitButtonFormStyle} onPress={register_user}><Text style={styles.textStyleButton}>Register</Text></Pressable> */}
 
 
-        </View >
-    );
+            </View >
+        );
+    } else {
+        return (
+            altScreen()
+        )
+    }
 };
 
 
 const styles = StyleSheet.create({
+    sghcontainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        // backgroundColor: "lightblue",
+
+    },
     overallContainer: {
         flex: 1,
         // backgroundColor: "yellow",

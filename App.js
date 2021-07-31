@@ -71,19 +71,26 @@ const App = ({ navigation }) => {
         <Stack.Screen
           name="Profile"
           component={Profile}
-          options={({ navigation, route }) => ({
-            headerLeft: (props) => (
-              <HeaderBackButton
-                {...props}
-                onPress={() => navigation.navigate('Home')}
-              />
-            ),
-          })}
+        // options={({ navigation, route }) => ({
+        //   headerLeft: (props) => (
+        //     <HeaderBackButton
+        //       {...props}
+        //       onPress={() => navigation.navigate('Home')}
+        //     />
+        //   ),
+        // })}
         />
         <Stack.Screen name="Goniometer" component={Goniometer} />
         <Stack.Screen name="SitStand" component={SitStand} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="HomePage" component={HomePage}
+          options={({ navigation, route }) => ({
+            headerLeft: () => (
+              null
+            ),
+          })}
+
+        />
         <Stack.Screen name="ViewAllUser" component={ViewAllUser} />
         <Stack.Screen name="FlexionChart" component={FlexionChart} />
         <Stack.Screen name="SitStandFormSG" component={SitStandFormSG} />
