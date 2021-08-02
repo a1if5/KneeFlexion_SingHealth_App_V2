@@ -286,7 +286,7 @@ const Profile = ({ navigation }) => {
                         }
                     </View>
                     <View style={styles.innerRowArrangementRight}>
-                        <TouchableOpacity style={styles.submitButton}><Text style={styles.submitButtonText}>View Chart</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.submitButton} onPress={() => { navigation.navigate("ExtensionChart") }}><Text style={styles.submitButtonText}>View Chart</Text></TouchableOpacity>
                     </View>
                 </View>
 
@@ -303,7 +303,7 @@ const Profile = ({ navigation }) => {
                         }
                     </View>
                     <View style={styles.innerRowArrangementRight}>
-                        <TouchableOpacity style={styles.submitButton}><Text style={styles.submitButtonText}>View Chart</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.submitButton} onPress={() => { navigation.navigate("SitStandChart") }}><Text style={styles.submitButtonText}>View Chart</Text></TouchableOpacity>
                     </View>
                 </View>
             </View >

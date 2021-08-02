@@ -12,13 +12,13 @@ import React, { useState, useEffect } from 'react';
 import { VictoryBar, VictoryAxis, VictoryLine, VictoryBrushContainer, VictoryZoomContainer, VictoryChart, VictoryTheme } from "victory-native";
 var db = openDatabase({ name: 'userDb.db' });
 
-const FlexionChart = ({ navigation }) => {
+const SitStandChart = ({ navigation }) => {
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
     // const [selectedDomain, setSelectedDomain] = useState({})
     // const [zoomDomain, setZoomDomain] = useState({})
     // const [sitStand, setSitStand] = useState([])
-    const [flexion, setFlexion] = useState([])
+    const [sitStandx, setSitStandx] = useState([])
 
 
     function handleZoon(domain) {
@@ -31,13 +31,13 @@ const FlexionChart = ({ navigation }) => {
 
     useEffect(() => {
         db.transaction((tx) => {
-            tx.executeSql('SELECT * FROM table_flexion', [], (tx, results) => {
+            tx.executeSql('SELECT * FROM table_sitStand', [], (tx, results) => {
                 for (let i = 0; i < results.rows.length; ++i) {
                 }
             });
         });
         db.transaction((tx) => {
-            tx.executeSql('SELECT * FROM table_flexion', [], (tx, results) => {
+            tx.executeSql('SELECT * FROM table_sitStand', [], (tx, results) => {
                 var temp = [];
                 for (let i = 0; i < results.rows.length; ++i) {
 
@@ -47,10 +47,10 @@ const FlexionChart = ({ navigation }) => {
                     console.log(new Date(correctDateFormat))
                     temp.push({
                         x: new Date(correctDateFormat),
-                        y: results.rows.item(i).degree
+                        y: results.rows.item(i).time
                     });
                 }
-                setFlexion(temp);
+                setSitStandx(temp);
             });
         });
     }, []);
@@ -82,7 +82,7 @@ const FlexionChart = ({ navigation }) => {
                     style={{
                         data: { stroke: "tomato" }
                     }}
-                    data={flexion}
+                    data={sitStandx}
                 />
             </VictoryChart>
         </View >
@@ -102,4 +102,4 @@ const styles = StyleSheet.create({
 
 
 
-export default FlexionChart
+export default SitStandChart

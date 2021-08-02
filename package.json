@@ -28,9 +28,11 @@
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-sqlite-storage": "^5.0.0",
     "react-native-stopwatch-timer": "^0.0.21",
+    "react-native-svg": "^12.1.1",
     "react-native-tts": "^4.1.0",
     "react-native-unimodules": "^0.14.6",
-    "react-native-webview": "^11.6.5"
+    "react-native-webview": "^11.6.5",
+    "victory-native": "^35.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

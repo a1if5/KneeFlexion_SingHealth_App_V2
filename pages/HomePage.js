@@ -61,13 +61,13 @@ const appFunctions = [
     {
         id: 4,
         title: "Guide",
-        navi: "Guide",
+        navi: "FlexionChart",
         image: "https://img.icons8.com/ios/50/000000/city-guide.png"
     },
     {
         id: 5,
         title: "Contact Us",
-        navi: "HomeScreen",
+        navi: "ContactUs",
         image: "https://img.icons8.com/ios/50/000000/phone-disconnected.png",
     },
 ]

@@ -12,9 +12,13 @@ import SitStand from "./pages/SitStand.js"
 import HomeScreen from "./pages/HomeScreen.js"
 import HomePage from "./pages/HomePage.js"
 import ViewAllUser from "./pages/ViewAllUser.js"
-import FlexionChart from "./pages/FlexionChart.js"
 import SitStandFormSG from "./pages/SitStandFormSG.js"
 import GoniometerFormSG from "./pages/GoniometerFormSG.js"
+import FlexionChart from "./pages/FlexionChart.js"
+import ExtensionChart from "./pages/ExtensionChart.js"
+import SitStandChart from "./pages/SitStandChart.js"
+import ContactUs from "./pages/ContactUs.js"
+
 
 import SQLite from 'react-native-sqlite-storage';
 
@@ -92,9 +96,15 @@ const App = ({ navigation }) => {
 
         />
         <Stack.Screen name="ViewAllUser" component={ViewAllUser} />
-        <Stack.Screen name="FlexionChart" component={FlexionChart} />
         <Stack.Screen name="SitStandFormSG" component={SitStandFormSG} />
         <Stack.Screen name="GoniometerFormSG" component={GoniometerFormSG} />
+        <Stack.Screen name="ExtensionChart" component={ExtensionChart} />
+        <Stack.Screen name="FlexionChart" component={FlexionChart} />
+        <Stack.Screen name="SitStandChart" component={SitStandChart} />
+        <Stack.Screen name="ContactUs" component={ContactUs} />
+
+
+
 
 
 
